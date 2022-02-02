@@ -1,0 +1,86 @@
+---
+title:  Powerpoint from Rmarkdown
+author: "Richard Martin"
+date: "02/02/2022"
+output: 
+  powerpoint_presentation:
+    reference_doc: aest_style.potx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(ggrepel)
+library(DT)
+car_data <- mtcars%>%
+  rownames_to_column()
+```
+
+## Reproducible Research:
+
+- Entire chain from raw data to output is documented/coded... no "by hand" modifications that are impossible to re-create.
+- Ensures that changes to either data or methodology get automatically reflected in the output.
+- The priority is on accuracy rather than aesthetics.
+
+## Motortrend cars from 1974:
+:::::: {.columns}
+::: {.column}
+```{r}
+fastest <- car_data%>%
+  filter(qsec==min(qsec))
+ggplot(car_data, aes(hp,qsec,colour=wt))+
+  geom_point()+
+  geom_label_repel(data=fastest, mapping=aes(label=rowname))+
+  scale_colour_viridis_c()+
+  labs(x="Horsepower",
+       y="Quarter mile time",
+       colour="Weight")
+```
+:::
+::: {.column}
+- The fastest car is the `r fastest$rowname` which gets `r fastest$mpg` Miles per gallon, and has `r fastest$hp` horsepower.
+:::
+::::::
+## Suppose Pantera is dropped (for some reason) 
+:::::: {.columns}
+::: {.column}
+```{r, echo=TRUE, message=FALSE}
+car_data <- anti_join(car_data,fastest)%>%
+  arrange(qsec)
+```
+:::
+::: {.column}
+```{r}
+datatable(car_data)
+```
+:::
+::::::
+## And run the same code again. 
+:::::: {.columns}
+::: {.column}
+```{r, message=FALSE}
+# exact same code.
+fastest <- car_data%>%
+  filter(qsec==min(qsec))
+ggplot(car_data, aes(hp,qsec,colour=wt))+
+  geom_point()+
+  geom_label_repel(data=fastest, mapping=aes(label=rowname))+
+  scale_colour_viridis_c()+
+  labs(x="Horsepower",
+       y="Quarter mile time",
+       colour="Weight")
+```
+:::
+::: {.column}
+- Now there is a new fastest car, and the plot **and** the prose automatically reflect this.
+- The fastest car is the `r fastest$rowname` which gets `r fastest$mpg` Miles per gallon, and has `r fastest$hp` horsepower.
+:::
+::::::
+
+## Drawbacks:
+
+- Any modifications to .ppt would be lost if the analysis had to be rerun.
+- So no aesthetic modifications to ppt should be made until numbers finalized. 
+
+
+
