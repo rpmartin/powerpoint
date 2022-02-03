@@ -1,0 +1,112 @@
+---
+title:  Powerpoint from Rmarkdown
+author: "Richard Martin"
+date: "02/02/2022"
+output: 
+  powerpoint_presentation:
+    reference_doc: aest_style.potx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(ggrepel)
+library(DT)
+library(aest)
+library(here)
+library(lubridate)
+library(styler)
+file_name <- "gold.csv"
+gold <- read_csv(here("data",file_name))%>%
+  mutate(file_name=file_name)
+```
+
+## 3 wrapper functions:
+
+- create plot with a one-liner function call.
+- functions found in package `aest` which can be installed from github.
+
+```{r, tidy='styler', echo=TRUE, eval=FALSE}
+  devtools::install_github("rpmartin/aest")
+```
+
+
+
+## Levels and Changes.
+:::::: {.columns}
+::: {.column}
+```{r, fig.retina=4}
+aest_level_and_change(gold,
+                      Price,
+                      Date,
+                      "ym",
+                      "annual")
+```
+:::
+::: {.column}
+
+```{r,tidy='styler', echo=TRUE, eval=FALSE}
+aest_level_and_change(gold,
+                      Price,
+                      Date,
+                      "ym",
+                      "annual")
+```
+
+- Default caption indicates variable name and originating file name.
+:::
+::::::
+## Parts and Whole:
+:::::: {.columns}
+::: {.column}
+```{r, fig.retina=4}
+year <- 2010:2022
+category <- c("retiring","entering","imigration","migration")
+length_df <- length(year)*length(category)
+flows <- crossing(year,category)%>%
+  mutate(number=sample(1000:10000, size=length_df),
+         number=ifelse(category=="retiring",-number,number),
+         file_name="labour_market_flows")
+aest_parts_and_whole(flows,
+                     year,
+                     category,
+                     number)
+```
+:::
+::: {.column}
+```{r, tidy='styler', echo=TRUE, eval=FALSE}
+aest_parts_and_whole(flows,
+                     year,
+                     category,
+                     number)
+```
+- Default caption can be over-rided by providing a caption. 
+
+
+:::
+::::::
+## Treemap. 
+:::::: {.columns}
+::: {.column}
+```{r, fig.retina=4}
+lmo <-tibble(category=paste("group",1:10,sep="-"))%>%
+  mutate(number=sample(1000:250000,size=length(category)),
+         file_name="lmo_employment")
+aest_treemap(lmo,category,number, caption="Based on data from blablabla...")
+```
+:::
+::: {.column}
+```{r, tidy='styler', echo=TRUE, eval=FALSE}
+aest_treemap(lmo,
+            category,
+            number,
+            caption="Based on data from blablabla...")
+```
+
+:::
+::::::
+
+
+
+
+
