@@ -21,18 +21,24 @@ gold <- read_csv(here("data",file_name))%>%
   mutate(file_name=file_name)
 ```
 
-## 3 wrapper functions:
+## 4 wrapper functions:
 
+:::::: {.columns}
+::: {.column}
+![](drake.jpeg)
+:::
+::: {.column}
 - create plot with a one-liner function call.
 - functions found in package `aest` which can be installed from github.
-
 ```{r, tidy='styler', echo=TRUE, eval=FALSE}
   devtools::install_github("rpmartin/aest")
 ```
 
-
+:::
+::::::
 
 ## Levels and Changes.
+
 :::::: {.columns}
 ::: {.column}
 ```{r, fig.retina=4}
@@ -80,7 +86,7 @@ aest_parts_and_whole(flows,
                      category,
                      number)
 ```
-- Default caption can be over-rided by providing a caption. 
+- Default caption can be overridden by providing a caption. 
 
 
 :::
@@ -103,6 +109,25 @@ aest_treemap(lmo,
             caption="Based on data from blablabla...")
 ```
 
+:::
+::::::
+
+## Mmmm donuts... 
+:::::: {.columns}
+::: {.column}
+```{r, fig.retina=4}
+aest_donut(lmo, category, number, "center text")
+```
+:::
+::: {.column}
+
+```{r, tidy='styler', echo=TRUE, eval=FALSE}
+aest_donut(lmo,
+          category,
+          number,
+          "center text"
+          )
+```
 :::
 ::::::
 
